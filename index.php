@@ -1,27 +1,88 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="keywords" content="secure chat, encrypted chat, crypt chat">
-	<meta name="description" content="Private, end-to-end encrypted, non-logging chat">
-	<title>Encrypted Chat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="secure chat, encrypted chat, crypt chat">
+    <meta name="description" content="Private, end-to-end encrypted, non-logging chat">
+    <title>Encrypted Chat</title>
+    <style>
+        /* CSS for the chat box */
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            position: relative;
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: chatFadeIn 1s ease-in-out;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @keyframes chatFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Additional CSS styles for the chat box elements */
+        .github-ribbon {
+            position: absolute;
+            right: 0px;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            z-index: 99999;
+            top: 0px;
+        }
+
+        #socket_status,
+        #key_status,
+        #share,
+        #other_party_key_status,
+        #chatBox {
+            display: none;
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+    </style>
 </head>
 <body>
-	<div>
-		<div class="github-ribbon" style="position: absolute; right: 0px; width: 150px; height: 150px; overflow: hidden; z-index: 99999; top: 0px;"><a target="_blank" style="display: inline-block; width: 200px; overflow: hidden; padding: 6px 0px; text-align: center; transform: rotate(45deg); text-decoration: none; color: rgb(255, 255, 255); position: inherit; right: -40px; font: 700 13px &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 3px 0px; background-color: rgb(170, 0, 0); top: 45px; background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));" href="https://github.com/sh4dowb/encrypted-chat">Fork me on GitHub</a></div>
-		Server Status: <pre id="socket_status" style="display:inline-block;">Connecting...</pre><br>
-		Key Fingerprint: <pre id="key_status" style="display:inline-block;">Generating...</pre><br>
-		<span style="display:none;" id="share">Share this URL with the other party: <a href="#"></a><br></span>
-		<span style="display:none;" id="other_party_key_status">Destination Key Fingerprint: <pre id="other_party_key" style="display:inline-block;">Loading...</pre><br></span>
-		<button id="startChat" onclick="createRoom()" disabled="disabled">Create Secure Chat Room</button>
-		<button style="display:none;" id="joinChat" onclick="joinRoom()" disabled="disabled">Join Secure Chat Room</button><br><br>
-		<div id="chatBox" style="display:none;">
-			<textarea cols="50" rows="7" id="messageBox"></textarea><br>
-			<button id="sendBtn" onclick="sendMessage()">Send</button><br>
-			<pre id="chatLog"></pre>
-		</div>
-	</div>
+    <div class="chat-container">
+        <div class="github-ribbon">
+            <a target="_blank" style="display: inline-block; width: 200px; overflow: hidden; padding: 6px 0px; text-align: center; transform: rotate(45deg); text-decoration: none; color: rgb(255, 255, 255); position: inherit; right: -40px; font: 700 13px &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 3px 0px; background-color: rgb(170, 0, 0); top: 45px; background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));" href="https://github.com/sh4dowb/encrypted-chat">Fork me on GitHub</a>
+        </div>
+        Server Status: <pre id="socket_status" style="display:inline-block;">Connecting...</pre><br>
+        Key Fingerprint: <pre id="key_status" style="display:inline-block;">Generating...</pre><br>
+        <span style="display:none;" id="share">Share this URL with the other party: <a href="#"></a><br></span>
+        <span style="display:none;" id="other_party_key_status">Destination Key Fingerprint: <pre id="other_party_key" style="display:inline-block;">Loading...</pre><br></span>
+        <button id="startChat" onclick="createRoom()" disabled="disabled">Create Secure Chat Room</button>
+        <button style="display:none;" id="joinChat" onclick="joinRoom()" disabled="disabled">Join Secure Chat Room</button><br><br>
+        <div id="chatBox">
+            <textarea cols="50" rows="7" id="messageBox"></textarea><br>
+            <button id="sendBtn" onclick="sendMessage()">Send</button><br>
+            <pre id="chatLog"></pre>
+        </div>
+    </div>
 </body>
 <script src="openpgp.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
